@@ -1,0 +1,6 @@
+#%PAM-1.0
+auth        required       pam_testprompt.so
+account     required       pam_testprompt.so ret=PAM_NEW_AUTHTOK_REQD
+password    required       pam_testprompt.so
+session     required       pam_testprompt.so
+session     optional       pam_xauth.so
