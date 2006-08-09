@@ -1,0 +1,53 @@
+pam_testprompt is a pam module useful for testing conversation
+functions of supposedly pam conformable applications.
+
+For example in order to test the 'su' program change the content of
+/etc/pam.d/su to
+
+---8<---
+#%PAM-1.0
+auth        required       pam_testprompt.so
+account     required       pam_testprompt.so
+password    required       pam_testprompt.so
+session     required       pam_testprompt.so
+session     optional       pam_xauth.so
+---8<---
+
+put the following into /etc/security/pam_testprompt_auth.conf:
+
+---8<---
+PAM_PROMPT_ECHO_OFF Password:
+
+---8<---
+
+'su' now behaves like normal except that no actual authentication
+takes place.
+
+The first column in pam_testprompt_{auth,password,session}.conf
+specifies the type of the prompt. Possible values are
+PAM_PROMPT_ECHO_OFF, PAM_PROMPT_ECHO_ON, PAM_ERROR_MSG,
+PAM_TEXT_INFO. The rest of the line is the string the pam
+application is supposed to print. A single empty new line indicates
+the end of a conversation specification. Typical real world pam
+modules only use one prompt per conversation like asking for the
+password in the example above. It's possible to put multiple prompts
+into one conversation though. GUI applications may use that to
+display a form instead of asking single questions. Example:
+
+---8<---
+PAM_PROMPT_ECHO_ON Forname: 
+PAM_PROMPT_ECHO_ON Surname: 
+
+PAM_TEXT_INFO Moin!
+
+---8<---
+
+pam_testprompt also allows to simulation of failures of pam modules
+by returning an error value. You can specify the return value in the
+pam config file. For example in order to tell the applications that
+the user needs to change his password you may add the following line
+to the pam config:
+
+---8<---
+account     required       pam_testprompt.so ret=PAM_NEW_AUTHTOK_REQD
+---8<---
