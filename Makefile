@@ -6,6 +6,13 @@ LIB = /lib
 CPPFLAGS += -DHAVE_GCCVISIBILITY
 CFLAGS += -fvisibility=hidden
 
+VERSION=0.0
+ifeq ($(wildcard .svn),.svn)
+  SVN_VERSION=$(VERSION)_SVN$(shell LANG=C svnversion .)
+else
+  SVN_VERSION=$(VERSION)
+endif
+
 all: pam_testprompt.so
 
 pam_testprompt.o: pam_testprompt.c
@@ -27,4 +34,10 @@ clean:
 
 -include *.d
 
-.PHONY: clean
+dist:
+	rm -rf pam_testprompt-$(SVN_VERSION)
+	svn export . pam_testprompt-$(SVN_VERSION)
+	tar --owner=root --group=root --force-local -cjf pam_testprompt-$(SVN_VERSION).tar.bz2 pam_testprompt-$(SVN_VERSION)
+	rm -rf pam_testprompt-$(SVN_VERSION)
+
+.PHONY: clean dist
