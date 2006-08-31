@@ -21,7 +21,7 @@ pam_testprompt.o: pam_testprompt.c
 pam_testprompt.so: pam_testprompt.o
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -o $@ -fPIC -shared -Wl,-z,defs -lpam $?
 
-install:
+install: all
 	install -d -m 755 $(DESTDIR)/etc/security
 	install -d -m 755 $(DESTDIR)/etc/pam.d
 	install -d -m 755 $(DESTDIR)$(LIB)/security
