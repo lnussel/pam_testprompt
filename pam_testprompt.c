@@ -205,6 +205,10 @@ static int converse(pam_handle_t * pamh)
 	return retval;
 }
 
+#ifndef PAM_AUTHTOK_RECOVERY_ERR
+#define PAM_AUTHTOK_RECOVERY_ERR PAM_AUTHTOK_RECOVER_ERR
+#endif
+
 #define RET(x) { #x, x }
 static struct retstr2num_s
 {
