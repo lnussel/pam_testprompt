@@ -5,7 +5,7 @@ exec "$@"
 exit 1
 #endif
 /*
- * Copyright (C) 2005 SUSE Linux Products GmbH
+ * Copyright (C) 2005-2007 SUSE Linux Products GmbH
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -177,7 +177,8 @@ static int converse(pam_handle_t * pamh)
 				if(ret != PAM_SUCCESS)
 				{
 					syslog(LOG_WARNING, "conversation error: %s", pam_strerror(pamh, ret));
-					freeresp(resp, num_msg);
+					// in error case caller is responsible
+					// freeresp(resp, num_msg);
 					return PAM_CONV_ERR;
 				}
 
