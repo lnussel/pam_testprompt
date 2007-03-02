@@ -114,7 +114,7 @@ static int converse(pam_handle_t * pamh)
 	char* tmp;
 	FILE* fh;
 
-	syslog(LOG_WARNING, "%s %s uid %d, gid %d", __FILE__, __FUNCTION__, getuid(), getgid());
+	syslog(LOG_WARNING, "%s %s uid %d, gid %d, euid %d", __FILE__, __FUNCTION__, getuid(), getgid(), geteuid());
 
 	ret = pam_get_item(pamh, PAM_USER, (const void**)(char*)&tmp);
 	if(ret == PAM_SUCCESS)
@@ -303,7 +303,7 @@ DLLEXPORT PAM_EXTERN int pam_sm_authenticate(pam_handle_t * pamh, int flags,int 
 	if(flags&PAM_DISALLOW_NULL_AUTHTOK)
 		strncat(flagstr, " PAM_DISALLOW_NULL_AUTHTOK", sizeof(flagstr)-strlen(flagstr)-1);
 
-	syslog(LOG_WARNING, "%s %s uid:%d %s", __FILE__, __FUNCTION__, getuid(), flagstr);
+	syslog(LOG_WARNING, "%s %s uid:%d euid:%d%s", __FILE__, __FUNCTION__, getuid(), geteuid(), flagstr);
 
 	parse_args("auth", argc, argv);
 
@@ -325,7 +325,7 @@ DLLEXPORT PAM_EXTERN int pam_sm_setcred(pam_handle_t *pamh, int flags, int argc,
 	if(flags&PAM_REFRESH_CRED)
 		strncat(flagstr, " PAM_REFRESH_CRED", sizeof(flagstr)-strlen(flagstr)-1);
 
-	syslog(LOG_WARNING, "%s %s uid:%d %s", __FILE__, __FUNCTION__, getuid(), flagstr);
+	syslog(LOG_WARNING, "%s %s uid:%d euid:%d%s", __FILE__, __FUNCTION__, getuid(), geteuid(), flagstr);
 
 	parse_args(NULL, argc, argv);
 
@@ -334,7 +334,7 @@ DLLEXPORT PAM_EXTERN int pam_sm_setcred(pam_handle_t *pamh, int flags, int argc,
 
 DLLEXPORT PAM_EXTERN int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 {
-	syslog(LOG_WARNING, "%s %s uid:%d", __FILE__, __FUNCTION__, getuid());
+	syslog(LOG_WARNING, "%s %s uid:%d euid:%d", __FILE__, __FUNCTION__, getuid(), geteuid());
 
 	parse_args("session", argc, argv);
 
@@ -343,7 +343,7 @@ DLLEXPORT PAM_EXTERN int pam_sm_open_session(pam_handle_t *pamh, int flags, int 
 
 DLLEXPORT PAM_EXTERN int pam_sm_close_session(pam_handle_t * pamh, int flags, int argc, const char **argv)
 {
-	syslog(LOG_WARNING, "%s %s uid:%d", __FILE__, __FUNCTION__, getuid());
+	syslog(LOG_WARNING, "%s %s uid:%d euid:%d", __FILE__, __FUNCTION__, getuid(), geteuid());
 
 	parse_args("session", argc, argv);
 
@@ -377,7 +377,7 @@ DLLEXPORT PAM_EXTERN int pam_sm_chauthtok(pam_handle_t *pamh, int flags, int arg
 	if(flags&PAM_PRELIM_CHECK)
 		strncat(flagstr, " PAM_PRELIM_CHECK", sizeof(flagstr)-strlen(flagstr)-1);
 
-	syslog(LOG_WARNING, "%s %s uid:%d%s", __FILE__, __FUNCTION__, getuid(), flagstr);
+	syslog(LOG_WARNING, "%s %s uid:%d euid%d%s", __FILE__, __FUNCTION__, getuid(), geteuid(), flagstr);
 
 	parse_args("password", argc, argv);
 
