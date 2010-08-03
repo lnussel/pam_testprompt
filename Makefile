@@ -1,6 +1,6 @@
 CPPFLAGS =
 CFLAGS = -g3 -Wall -O0 -Werror-implicit-function-declaration -MD
-LDFLAGS = -lpam
+LDLIBS = -lpam
 LIB = /lib
 
 CPPFLAGS += -DHAVE_GCCVISIBILITY
@@ -19,7 +19,7 @@ pam_testprompt.o: pam_testprompt.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -fPIC -c -o $@ $<
 
 pam_testprompt.so: pam_testprompt.o
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -o $@ -fPIC -shared -Wl,-z,defs -lpam $?
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -o $@ -fPIC -shared -Wl,-z,defs $? $(LDLIBS)
 
 install: all
 	install -d -m 755 $(DESTDIR)/etc/security

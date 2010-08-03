@@ -264,7 +264,7 @@ static void parse_args(const char* type, int argc, const char **argv)
 	{
 		if(!strncmp(argv[i], "file=", 5))
 		{
-			strncat(file, argv[i]+5, sizeof(file));
+			strncat(file, argv[i]+5, sizeof(file)-1);
 		}
 		else if(!strncmp(argv[i], "ret=", 4))
 		{
