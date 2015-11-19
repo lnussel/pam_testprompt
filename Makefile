@@ -7,10 +7,10 @@ CPPFLAGS += -DHAVE_GCCVISIBILITY
 CFLAGS += -fvisibility=hidden
 
 VERSION=0.0
-ifeq ($(wildcard .svn),.svn)
-  SVN_VERSION=$(VERSION)_SVN$(shell LANG=C svnversion .)
+ifeq ($(wildcard .git),.git)
+  _VERSION=$(VERSION)+$(shell LANG=C git log -n1 --date=short --pretty=format:"git%cd.%h"|sed 's@-@@g')
 else
-  SVN_VERSION=$(VERSION)
+  _VERSION=$(VERSION)
 endif
 
 all: pam_testprompt.so
@@ -35,9 +35,6 @@ clean:
 -include *.d
 
 dist:
-	rm -rf pam_testprompt-$(SVN_VERSION)
-	svn export . pam_testprompt-$(SVN_VERSION)
-	tar --owner=root --group=root --force-local -cjf pam_testprompt-$(SVN_VERSION).tar.bz2 pam_testprompt-$(SVN_VERSION)
-	rm -rf pam_testprompt-$(SVN_VERSION)
+	git archive --prefix="pam_testprompt-$(_VERSION)"/ HEAD | xz > pam_testprompt-$(_VERSION).tar.xz
 
 .PHONY: clean dist
